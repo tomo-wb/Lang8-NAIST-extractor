@@ -1,4 +1,4 @@
-This is a script for extracting error-correct pairs from the [Lang-8 Learner Corpora v2.0]()
+This is a script for extracting error-correct pairs from the [NAIST Lang-8 Learner Corpora v2.0]()
 
 # How to use
 ~~~
