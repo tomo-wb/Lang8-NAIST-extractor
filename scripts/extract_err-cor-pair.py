@@ -4,7 +4,9 @@ import json
 import re
 
 language = ['English', 'Japanese', 'Korean']
-tags = ["f-red", "f-blue", "f-bold"]
+color_tags = ["f-red", "f-blue", "f-bold"]
+sline_tag = "sline]"
+
 
 def main():
     args = parse_args()
@@ -29,9 +31,12 @@ def make_sent_pair(orig_sents, corr_sents, args):
     outputs = []
     for i, orig_sent in enumerate(orig_sents):
         if len(corr_sents[i]) > 0:
+            tag_err = False
             for corr_sent in corr_sents[i]:
-                text, tag_err = delete_tags(corr_sent, args)
-                if not tag_err:
+                text, tag_err = delete_tags_color(corr_sent, tag_err, args)
+                if sline_tag in text:
+                    text, tag_err = delete_tags_sline(text, tag_err, args)
+                if not tag_err and text != "":
                     output = orig_sent + "\t" + text
                     outputs.append(output)
         else:
@@ -40,26 +45,58 @@ def make_sent_pair(orig_sents, corr_sents, args):
 
     return outputs
 
-def delete_tags(text, args):
+def delete_tags_sline(text, tag_err, args):
+    s_sline = "[sline]"
+    e_sline = "[/sline]"
+    if args.tags:
+        return text
+    words = text.split(" ")
+    total_s = 0
+    total_e = 0
+    output_lists = []
+    tmp_list = []
+    for word in words:
+        num_s = word.count(s_sline)
+        num_e = word.count(e_sline)
+
+        total_s += num_s
+        total_e += num_e
+        tmp_list.append(word)
+        if total_s == 0 and total_e == 0:
+            output_lists.append(word)
+            tmp_list = []
+        elif total_s == total_e:
+            tmp_text = " ".join(tmp_list)
+            tmp_text = re.sub(r"\[sline\](.*)\[\/sline\]", r"", tmp_text)
+            if tmp_text != "":
+                output_lists.append(tmp_text)
+            total_s = total_e = 0
+            tmp_list = []
+    text = " ".join(output_lists)
+
+    if sline_tag in text:
+        tag_err = True
+
+    text = re.sub(r'^\s+', '', text)
+    text = re.sub(r'\s+$', '', text)
+    text = re.sub(r'\s+', ' ', text)
+    return text, tag_err
+
+def delete_tags_color(text, tag_err, args):
     if args.tags:
         return text
     text = replace_tags(text)
 
-    tag_err = False
     if text == None:
         text = ""
-    for tag in tags:
+    for tag in color_tags:
         s = "\[" + tag + "\]"
         e = "\[\/" + tag + "\]"
         text = re.sub(r"%s" % s, r"", text)
         text = re.sub(r"%s" % e, r"", text)
         if tag in text:
             tag_err = True
-    text = re.sub(r"\[sline\](.+?)\[\/sline\]", r"", text)
 
-    text = re.sub(r'^\s+', '', text)
-    text = re.sub(r'\s+$', '', text)
-    text = re.sub(r'\s+', ' ', text)
     return text, tag_err
 
 def replace_tags(s):
