@@ -3,7 +3,19 @@ import codecs
 import json
 import re
 
-language = ['English', 'Japanese', 'Korean']
+language = ['Korean', 'English', 'Japanese', 'Mandarin', 'Traditional Chinese',
+            'Vietnamese', 'German', 'French', 'Other language', 'Spanish',
+            'Indonesian', 'Russian', 'Arabic', 'Thai', 'Swedish', 'Dutch',
+            'Hebrew', 'Tagalog', 'Portuguese(Brazil)', 'Cantonese', 'Italian',
+            'Esperanto', 'Hawaiian', 'Afrikaans', 'Mongolian', 'Hindi', 'Polish',
+            'Finnish', 'Greek', 'Bihari', 'Farsi', 'Urdu', 'Turkish', 'Portuguese(Portugal)',
+            'Bulgarian', 'Norwegian', 'Romanian', 'Albanian', 'Ukrainian', 'Catalan',
+            'Latvian', 'Danish', 'Serbian', 'Slovak', 'Georgian', 'Hungarian', 'Malaysian',
+            'Icelandic', 'Latin', 'Laotian', 'Croatian', 'Lithuanian', 'Bengali', 'Tongan',
+            'Slovenian', 'Swahili', 'Irish', 'Czech', 'Estonian', 'Khmer', 'Javanese', 'Sinhalese',
+            'Sanskrit', 'Armenian', 'Tamil', 'Basque', 'Welsh', 'Bosnian', 'Macedonian', 'Telugu',
+            'Uzbek', 'Gaelic', 'Azerbaijanian', 'Tibetan', 'Panjabi', 'Marathi', 'Yiddish', 'Ainu',
+            'Haitian', 'Slavic']
 color_tags = ["f-red", "f-blue", "f-bold"]
 sline_tag = "sline]"
 
@@ -17,9 +29,9 @@ def main():
             data_num += 1
             try:
                 jsonData = json.loads(line, strict=False)
-                l2_lang, l1_lang = jsonData[2], jsonData[3]
+                l2_langs, l1_lang = jsonData[2], jsonData[3]
                 orig_sents, corr_sents = jsonData[4], jsonData[5]
-                if (args.l1 == None or args.l1 == l1_lang) and args.l2 == l2_lang:
+                if (args.l1 == None or args.l1 == l1_lang) and args.l2 in l2_langs:
                     outputs = make_sent_pair(orig_sents, corr_sents, args)
                     for output in outputs:
                         print(output)
