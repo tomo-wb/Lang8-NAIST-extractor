@@ -1,4 +1,5 @@
 This is the script for extracting error-correct pairs from the [NAIST Lang-8 Learner Corpora v2.0]()
+This program supports only python 3.
 
 # How to use
 ~~~
