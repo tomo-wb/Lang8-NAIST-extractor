@@ -1,7 +1,10 @@
+# coding: utf-8
+
 import argparse
 import codecs
 import json
 import re
+import platform
 
 language = ['Korean', 'English', 'Japanese', 'Mandarin', 'Traditional Chinese',
             'Vietnamese', 'German', 'French', 'Other language', 'Spanish',
@@ -21,6 +24,7 @@ sline_tag = "sline]"
 
 
 def main():
+    assert platform.python_version_tuple()[0] == '3', 'This program supports only python3'
     args = parse_args()
     data_num = 0
     error_num = 0
