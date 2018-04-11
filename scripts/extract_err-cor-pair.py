@@ -42,9 +42,11 @@ def main():
 def make_sent_pair(orig_sents, corr_sents, args):
     outputs = []
     for i, orig_sent in enumerate(orig_sents):
+        orig_sent = orig_sent.replace('\t', ' ')
         if len(corr_sents[i]) > 0:
             tag_err = False
             for corr_sent in corr_sents[i]:
+                corr_sent = corr_sent.replace('\t', ' ')
                 text, tag_err = delete_tags_color(corr_sent, tag_err, args)
                 if sline_tag in text:
                     text, tag_err = delete_tags_sline(text, tag_err, args)
@@ -63,10 +65,8 @@ def delete_tags_sline(text, tag_err, args):
     if args.tags:
         return text
     words = text.split(" ")
-    total_s = 0
-    total_e = 0
-    output_lists = []
-    tmp_list = []
+    total_s = total_e = 0
+    output_lists, tmp_list = [], []
     for word in words:
         num_s = word.count(s_sline)
         num_e = word.count(e_sline)
@@ -89,8 +89,6 @@ def delete_tags_sline(text, tag_err, args):
     if sline_tag in text:
         tag_err = True
 
-    text = re.sub(r'^\s+', '', text)
-    text = re.sub(r'\s+$', '', text)
     text = re.sub(r'\s+', ' ', text)
     return text, tag_err
 
