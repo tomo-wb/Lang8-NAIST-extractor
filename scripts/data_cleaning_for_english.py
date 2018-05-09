@@ -60,13 +60,22 @@ def levenshtein_distance(errs, corrs):
             j -= 1
     return del_num, ins_num
 
-def process(text):
-    text = mojimoji.zen_to_han(text.rstrip(), kana=False)
+def lang_check(text):
+    text = mojimoji.zen_to_han(text.rstrip('\n'), kana=False)
     lang, prob = langid.classify(text)
     ascii = check_ascii(text)
+
     if lang == 'en' and ascii:
-        err_corr = text.split("\t")
-        if len(err_corr) == 2:
+        return True
+    else:
+        return False
+
+def process(text):
+    err_corr = text.split("\t")
+    if err_corr[1] != '':
+        err_lang = lang_check(err_corr[0])
+        corr_lang = lang_check(err_corr[1])
+        if err_lang and corr_lang:
             errs = tokenize.word_tokenize(err_corr[0])
             corrs = tokenize.word_tokenize(err_corr[1])
             del_num, ins_num = levenshtein_distance(errs, corrs)
