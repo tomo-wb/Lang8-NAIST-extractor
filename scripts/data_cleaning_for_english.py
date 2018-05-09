@@ -2,27 +2,16 @@ import sys
 import platform
 import codecs
 from nltk import tokenize
-from joblib import Parallel, delayed
 import mojimoji
-import langdetect
-from langdetect import DetectorFactory
-
+import langid
 
 # number of parallel processing
 para = 4
 
 # settings for xxx2018 paper
-DetectorFactory.seed = 0
 d_num = 6
 i_num = 6
 #####
-
-def get_lang(text):
-    try:
-        lang = langdetect.detect(text)
-    except:
-        lang = "None"
-    return lang
 
 def check_ascii(text):
     if text:
@@ -73,7 +62,7 @@ def levenshtein_distance(errs, corrs):
 
 def process(text):
     text = mojimoji.zen_to_han(text.rstrip(), kana=False)
-    lang = get_lang(text)
+    lang, prob = langid.classify(text)
     ascii = check_ascii(text)
     if lang == 'en' and ascii:
         err_corr = text.split("\t")
@@ -88,5 +77,7 @@ if __name__ == "__main__":
     assert platform.python_version_tuple()[0] == '3', 'This program supports only python3'
     file = sys.argv[1]
     with codecs.open(file, 'r', encoding='utf8') as f:
-        Parallel(n_jobs=para, verbose=5)([delayed(process)(text) for text in f])
+        for text in f:
+            process(text)
+        #Parallel(n_jobs=para, verbose=5)([delayed(process)(text) for text in f])
 
