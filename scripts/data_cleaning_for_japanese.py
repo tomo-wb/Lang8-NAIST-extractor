@@ -54,7 +54,7 @@ def levenshtein_distance(errs, corrs):
         else:
             ins_num += 1
             j -= 1
-    print(del_num, ins_num)
+    #print(del_num, ins_num)
     return del_num, ins_num
 
 def lang_check(text):
@@ -74,14 +74,16 @@ def process(text):
         corr_lang = lang_check(err_corr[1])
 
         if err_lang and corr_lang:
-            err_corr[0] = mojimoji.zen_to_han(err_corr[0].rstrip('\n'), kana=False)
+            err_corr[0] = mojimoji.han_to_zen(err_corr[0].rstrip('\n'), ascii=False, digit=False)
+            err_corr[0] = mojimoji.zen_to_han(err_corr[0], kana=False)
             errs = list(err_corr[0])
-            err_corr[1] = mojimoji.zen_to_han(err_corr[1].rstrip('\n'), kana=False)
+            err_corr[1] = mojimoji.han_to_zen(err_corr[1].rstrip('\n'), ascii=False, digit=False)
+            err_corr[1] = mojimoji.zen_to_han(err_corr[1], kana=False)
             corrs = list(err_corr[1])
             del_num, ins_num = levenshtein_distance(errs, corrs)
-            print(err_corr[0] + "\t" + err_corr[1])
-            # if del_num < d_num and ins_num < i_num:
-            #     print(err_corr[0] + "\t" + err_corr[1])
+            #print(err_corr[0] + "\t" + err_corr[1])
+            if del_num < d_num and ins_num < i_num:
+                 print(err_corr[0] + "\t" + err_corr[1])
 
 if __name__ == "__main__":
     assert platform.python_version_tuple()[0] == '3', 'This program supports only python3'
