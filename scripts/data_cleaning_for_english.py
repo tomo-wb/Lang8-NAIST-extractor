@@ -8,7 +8,7 @@ import langid
 # number of parallel processing
 para = 4
 
-# settings for xxx2018 paper
+# settings
 d_num = 6
 i_num = 6
 #####
