@@ -38,3 +38,5 @@ if __name__ == "__main__":
     e = ["A", "B", "C", "E", "G", "H"]
     c = ["A", "B", "C", "D", "E", "F", "G"]
     print(align_err_cor(e, c))
+    # output is 
+    # (['A', 'B', 'C', None, 'E', None, 'G', 'H'], ['A', 'B', 'C', 'D', 'E', 'F', 'G', None])
