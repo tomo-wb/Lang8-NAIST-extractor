@@ -3,8 +3,8 @@ import platform
 import codecs
 from nltk import tokenize
 import mojimoji
-import levenshtein_distance as ld
 import utils
+from get_del_ins_num import get_del_ins_num
 
 # number of parallel processing
 para = 4
@@ -31,7 +31,7 @@ def process(text):
         if err_lang and corr_lang:
             errs = tokenize.word_tokenize(err)
             corrs = tokenize.word_tokenize(corr)
-            del_num, ins_num = ld.levenshtein_distance(errs, corrs)
+            del_num, ins_num = get_del_ins_num(errs, corrs)
             del_portion = del_num / len(errs)
             ins_portion = ins_num / len(corrs)
             if del_num < d_num and ins_num < i_num and del_portion < 0.33 and ins_portion < 0.33:

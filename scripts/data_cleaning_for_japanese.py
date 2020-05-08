@@ -2,7 +2,7 @@ import sys
 import platform
 import codecs
 import mojimoji
-import levenshtein_distance as ld
+from get_del_ins_num import get_del_ins_num
 import utils
 
 d_num = 6
@@ -23,7 +23,7 @@ def process(text):
         if err_lang and corr_lang:
             errs = list(err)
             corrs = list(corr)
-            del_num, ins_num = ld.levenshtein_distance(errs, corrs)
+            del_num, ins_num = get_del_ins_num(errs, corrs)
             del_portion = del_num / len(errs)
             ins_portion = ins_num / len(corrs)
             if del_num < d_num and ins_num < i_num and del_portion < 0.4 and ins_portion < 0.4:
